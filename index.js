@@ -42,7 +42,9 @@ const loadNewsDetails = async (id) => {
 
 
 const displayNewsDetails = categories => {
-
+    categories.sort((a, b) => {
+        return b.total_view - a.total_view
+    })
     const showDetail = document.getElementById('show-details');
     categories.forEach(category => {
 
