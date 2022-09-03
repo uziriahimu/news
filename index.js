@@ -47,9 +47,11 @@ const displayNewsDetails = categories => {
     })
     const showNews = document.getElementById('show-all-news').innerText = categories.length ? categories.length : 'No news'
     const showDetail = document.getElementById('show-details');
+    showDetail.innerHTML = ' '
     categories.forEach(category => {
 
         const detailsdiv = document.createElement('div')
+
         detailsdiv.classList.add('row')
 
         detailsdiv.innerHTML = `
