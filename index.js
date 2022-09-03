@@ -1,8 +1,13 @@
-const loadCategories = () => {
-    const url = `https://openapi.programming-hero.com/api/news/categories`
-    fetch(url)
-        .then(res => res.json())
-        .then(data => displayCategories(data.data.news_category))
+const loadCategories = async () => {
+    const url = ` https://openapi.programming-hero.com/api/news/categories`
+    try {
+        const res = await fetch(url)
+        const data = await res.json()
+        displayCategories(data.data.news_category)
+    }
+    catch (error) {
+        alert('Something Went Wrong')
+    }
 
 }
 const displayCategories = categories => {
@@ -22,14 +27,19 @@ const displayCategories = categories => {
 
 
 }
-
-const loadNewsDetails = (id) => {
+const loadNewsDetails = async (id) => {
+    loadSpinner(true)
     const url = `https://openapi.programming-hero.com/api/news/category/${id}`
-    fetch(url)
-        .then(res => res.json())
-        .then(data => displayNewsDetails(data.data))
-
+    try {
+        const res = await fetch(url)
+        const data = await res.json()
+        displayNewsDetails(data.data)
+    }
+    catch (error) {
+        alert('Something wrong')
+    }
 }
+
 
 const displayNewsDetails = categories => {
 
@@ -62,8 +72,8 @@ const displayNewsDetails = categories => {
         <div>${category.total_view ? category.total_view : 'No data found'}</div>
         </div>
         <div>
-         <button onclick="displayDetails ('${category.category_id}') " class="btn btn-primary" type="submit" data-bs-toggle="modal" data-bs-target="#showModal">Details</button>
-         </div>
+        <button onclick="detailModal('${category._id}')" data-bs-toggle="modal"data-bs-target="#exampleModal" class="btn btn-primary" type="submit" >Details</button>
+        </div>
     </div>
 </div>
 </div>
@@ -73,28 +83,56 @@ const displayNewsDetails = categories => {
         `
         showDetail.appendChild(detailsdiv)
     });
-
+    loadSpinner(false)
 }
 
 
-// const loadDetails = (id) => {
-//     const url = `https://openapi.programming-hero.com/api/news/category/${id}`
-//     fetch(url)
-//         .then(res => res.json())
-//         .then(data => displayDetails(data.data[0]))
 
-// }
-// const displayDetails = cat => {
+// modal 
 
-//     const Details = document.getElementById('showModalLabel')
-//     Details.innerText = cat.author.name
-//     const modalBody = document.getElementById('show-details')
-//     modalBody.innerHTML = `
+const detailModal = async (dataId) => {
+    const url = `https://openapi.programming-hero.com/api/news/${dataId}`
+    try {
+        const res = await fetch(url)
+        const data = await res.json()
+        displayModal(data.data)
+    }
+    catch (error) {
+        alert('Something went wrong')
+    }
 
-// `
 
-// }
-// loadDetails()
-// loadNewsDetails()
+}
+const displayModal = id => {
+
+    id.forEach(newsId => {
+        console.log(newsId)
+        const modalTitle = document.getElementById('exampleModalLabel')
+        modalTitle.innerText = newsId.title;
+        const modalBody = document.getElementById('modal-body')
+        modalBody.innerHTML = ` 
+      <img class="img-fluid" src="${newsId.author.img}" alt="">
+      <P>${newsId.author.name ? newsId.author.name : 'No found name'} </br> ${newsId.author.published_date}
+      <hr>
+      <p><i class="fa-solid fa-eye"></i> ${newsId.total_view ? newsId.total_view : 'No data available'} </p>
+      <p>${newsId.title}</p>
+      <img class="img-fluid" src="${newsId.image_url}" alt="">
+      `
+    })
+}
+
+const loadSpinner = isLoading => {
+    const loader = document.getElementById('loader')
+    if (isLoading) {
+        loader.classList.remove('d-none')
+    }
+    else {
+        loader.classList.add('d-none')
+    }
+}
+
+
+loadNewsDetails()
+
 
 loadCategories()
