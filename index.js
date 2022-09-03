@@ -45,6 +45,7 @@ const displayNewsDetails = categories => {
     categories.sort((a, b) => {
         return b.total_view - a.total_view
     })
+    const showNews = document.getElementById('show-all-news').innerText = categories.length ? categories.length : 'No news'
     const showDetail = document.getElementById('show-details');
     categories.forEach(category => {
 
